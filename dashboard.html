@@ -1,0 +1,1868 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASTER Trading Bot Dashboard</title>
+    <link rel="icon" type="image/png" href="/static/aster-logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0B0E11;
+            color: #EAECEF;
+            padding: 10px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .top-banner {
+            background: linear-gradient(90deg, #0B0E11 0%, #1E2329 50%, #0B0E11 100%);
+            border-bottom: 2px solid #F0B90B;
+            padding: 12px 20px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 600;
+            color: #F0B90B;
+            margin: -10px -10px 20px -10px;
+            box-shadow: 0 2px 10px rgba(240, 185, 11, 0.2);
+            letter-spacing: 0.5px;
+        }
+
+        header {
+            text-align: center;
+            padding: 20px 0;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #F0B90B;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 10px;
+            position: relative;
+            padding-left: 65px;
+            padding-right: 65px;
+        }
+
+        .home-btn {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #F0B90B 0%, #FCD535 100%);
+            border: 2px solid #F0B90B;
+            color: #0B0E11;
+            font-size: 22px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(240, 185, 11, 0.4);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+        }
+
+        .home-btn:hover {
+            box-shadow: 0 6px 20px rgba(240, 185, 11, 0.6);
+            transform: translateY(-50%) translateY(-2px);
+            background: linear-gradient(135deg, #FCD535 0%, #F0B90B 100%);
+        }
+
+        .home-btn:active {
+            transform: translateY(-50%) scale(0.95);
+        }
+
+        .logo {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: 2px solid #F0B90B;
+            box-shadow: 0 0 15px rgba(240, 185, 11, 0.4);
+        }
+
+        h1 {
+            font-size: 28px;
+            margin: 0;
+            background: linear-gradient(90deg, #F0B90B 0%, #FCD535 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+        }
+
+        .timestamp {
+            font-size: 12px;
+            color: #848E9C;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .status-running {
+            background: #0ECB81;
+        }
+
+        .status-stopped {
+            background: #F6465D;
+        }
+
+        .card {
+            background: #1E2329;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+            border: 1px solid #2B3139;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #F0B90B;
+            border-bottom: 1px solid rgba(240, 185, 11, 0.2);
+            padding-bottom: 8px;
+        }
+
+        .card-compact {
+            padding: 12px;
+        }
+
+        .two-column-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 15px;
+        }
+
+        .stat-box {
+            background: #181A20;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid #2B3139;
+            transition: all 0.3s ease;
+        }
+
+        .stat-box:hover {
+            border-color: #F0B90B;
+            box-shadow: 0 0 10px rgba(240, 185, 11, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #848E9C;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #EAECEF;
+        }
+
+        .stat-value.positive {
+            color: #0ECB81;
+        }
+
+        .stat-value.negative {
+            color: #F6465D;
+        }
+
+        .regime-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: bold;
+            margin: 5px 0;
+            background: #F0B90B;
+            color: #0B0E11;
+        }
+
+        .stat-box.market-regime-box {
+            grid-column: span 2;
+            background: linear-gradient(135deg, rgba(240, 185, 11, 0.1) 0%, rgba(240, 185, 11, 0.05) 100%);
+            border: 1px solid rgba(240, 185, 11, 0.3);
+        }
+
+        .regime-high_vol_trending {
+            background: #F0B90B;
+            color: #0B0E11;
+        }
+
+        .regime-low_vol_ranging {
+            background: #0ECB81;
+            color: #0B0E11;
+        }
+
+        .regime-momentum_exhaustion {
+            background: #F6465D;
+            color: #EAECEF;
+        }
+
+        .regime-mixed {
+            background: #848E9C;
+            color: #EAECEF;
+        }
+
+        .open-positions-container {
+            background: linear-gradient(135deg, #1E2329 0%, #181A20 100%);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 12px;
+            box-shadow: 0 4px 20px rgba(240, 185, 11, 0.3);
+            border: 2px solid #F0B90B;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .open-positions-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #F0B90B 0%, #FCD535 50%, #F0B90B 100%);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        .open-positions-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(240, 185, 11, 0.3);
+        }
+
+        .open-positions-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #F0B90B;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .open-positions-count {
+            background: #F0B90B;
+            color: #0B0E11;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .position {
+            background: linear-gradient(135deg, #1E2329 0%, #181A20 100%);
+            padding: 18px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border: 2px solid #2B3139;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .position:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(240, 185, 11, 0.2);
+            border-color: #F0B90B;
+        }
+
+        .position.position-long {
+            border-left: 4px solid #0ECB81;
+        }
+
+        .position.position-short {
+            border-left: 4px solid #F6465D;
+        }
+
+        .position-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .position-symbol {
+            font-size: 20px;
+            font-weight: 700;
+            color: #F0B90B;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .position-side {
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: bold;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .side-long {
+            background: linear-gradient(135deg, #0ECB81 0%, #12E88F 100%);
+            color: #0B0E11;
+        }
+
+        .side-short {
+            background: linear-gradient(135deg, #F6465D 0%, #FF6B80 100%);
+            color: #EAECEF;
+        }
+
+        .position-details {
+            font-size: 13px;
+            line-height: 2;
+            color: #EAECEF;
+        }
+
+        .position-details strong {
+            color: #F0B90B;
+            font-weight: 600;
+        }
+
+        .position-metric {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 2px 0;
+        }
+
+        .position-alert {
+            padding: 10px 14px;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-size: 13px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .alert-danger {
+            background: linear-gradient(135deg, #F6465D 0%, #FF1744 100%);
+            color: #FFFFFF;
+            border: 2px solid #FF1744;
+            animation: pulse-danger 1.5s infinite;
+        }
+
+        .alert-warning {
+            background: linear-gradient(135deg, #F0B90B 0%, #FCD535 100%);
+            color: #0B0E11;
+            border: 2px solid #F0B90B;
+            animation: pulse-warning 2s infinite;
+        }
+
+        @keyframes pulse-danger {
+            0%, 100% {
+                opacity: 1;
+                box-shadow: 0 0 15px rgba(246, 70, 93, 0.6);
+            }
+            50% {
+                opacity: 0.85;
+                box-shadow: 0 0 25px rgba(246, 70, 93, 0.8);
+            }
+        }
+
+        @keyframes pulse-warning {
+            0%, 100% {
+                opacity: 1;
+                box-shadow: 0 0 10px rgba(240, 185, 11, 0.4);
+            }
+            50% {
+                opacity: 0.9;
+                box-shadow: 0 0 15px rgba(240, 185, 11, 0.6);
+            }
+        }
+
+        .position-pnl-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 700;
+            margin-left: 5px;
+        }
+
+        .position-pnl-badge.positive {
+            background: rgba(14, 203, 129, 0.2);
+            color: #0ECB81;
+            border: 1px solid #0ECB81;
+        }
+
+        .position-pnl-badge.negative {
+            background: rgba(246, 70, 93, 0.2);
+            color: #F6465D;
+            border: 1px solid #F6465D;
+        }
+
+        .position-strategy {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            background: rgba(99, 102, 241, 0.3);
+            font-size: 11px;
+            margin-top: 5px;
+        }
+
+        .trade {
+            background: #181A20;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 6px;
+            font-size: 12px;
+            line-height: 1.6;
+            border: 1px solid #2B3139;
+        }
+
+        .trade-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 6px;
+        }
+
+        .strategy-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .strategy-item {
+            background: #181A20;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            flex: 1 1 calc(50% - 5px);
+            min-width: 140px;
+            border: 1px solid #2B3139;
+        }
+
+        .strategy-item.enabled {
+            border: 2px solid #F0B90B;
+            box-shadow: 0 0 8px rgba(240, 185, 11, 0.3);
+        }
+
+        .strategy-item.disabled {
+            opacity: 0.5;
+            border: 2px solid #F6465D;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            font-size: 18px;
+        }
+
+        .error {
+            background: #F6465D;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+            color: #EAECEF;
+        }
+
+        .refresh-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #F0B90B 0%, #FCD535 100%);
+            border: 2px solid #F0B90B;
+            color: #0B0E11;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(240, 185, 11, 0.5);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .refresh-btn:hover {
+            box-shadow: 0 6px 25px rgba(240, 185, 11, 0.7);
+            transform: translateY(-3px);
+        }
+
+        .refresh-btn:active {
+            transform: scale(0.95);
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .spinning {
+            animation: spin 1s linear infinite;
+        }
+
+
+        .wallet-info {
+            text-align: center;
+            padding: 12px;
+            background: linear-gradient(90deg, rgba(240, 185, 11, 0.15) 0%, rgba(240, 185, 11, 0.05) 100%);
+            border-radius: 8px;
+            font-size: 13px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(240, 185, 11, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .wallet-address {
+            color: #F0B90B;
+            font-weight: 600;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+        }
+
+        .copy-btn, .explorer-btn {
+            background: #F0B90B;
+            color: #0B0E11;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .explorer-btn {
+            background: #0ECB81;
+        }
+
+        .copy-btn:hover, .explorer-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .copy-btn:hover {
+            background: #FCD535;
+        }
+
+        .explorer-btn:hover {
+            background: #12E88F;
+        }
+
+        .copy-btn:active, .explorer-btn:active {
+            transform: scale(0.95);
+        }
+
+        .status-box {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-box .status-badge {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            box-shadow: 0 2px 8px rgba(14, 203, 129, 0.3);
+        }
+
+        .status-info-icons {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 11px;
+            color: #848E9C;
+        }
+
+        .status-icon {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 8px;
+            background: #1E2329;
+            border-radius: 6px;
+            border: 1px solid #2B3139;
+        }
+
+        .status-icon-symbol {
+            color: #F0B90B;
+            font-weight: 600;
+            font-size: 10px;
+        }
+
+        .status-icon-dynamic {
+            color: #0ECB81;
+            font-size: 14px;
+        }
+
+        .strategy-performance-chart-container {
+            background: #1E2329;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+            border: 1px solid #2B3139;
+        }
+
+        .strategy-chart-wrapper {
+            position: relative;
+            height: 200px;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .strategy-stats-row {
+            display: flex;
+            gap: 15px;
+            align-items: stretch;
+            flex-wrap: wrap;
+        }
+
+        .strategy-performance-layout {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+            align-items: stretch;
+        }
+
+        .strategy-chart-section {
+            flex: 2;
+            min-width: 400px;
+        }
+
+        .strategy-cards-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            min-width: 250px;
+        }
+
+        .strategy-stat-card {
+            background: #181A20;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid #2B3139;
+            transition: all 0.3s ease;
+        }
+
+        .strategy-stat-card:hover {
+            border-color: #F0B90B;
+            box-shadow: 0 0 10px rgba(240, 185, 11, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .strategy-stat-card .strategy-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: #F0B90B;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .strategy-stat-card .strategy-metrics {
+            font-size: 11px;
+            line-height: 1.8;
+            color: #848E9C;
+        }
+
+        .strategy-stat-card .strategy-pnl {
+            font-size: 16px;
+            font-weight: 700;
+            margin-top: 5px;
+        }
+
+        .strategy-enabled-badge {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 9px;
+            font-weight: 700;
+            background: #0ECB81;
+            color: #0B0E11;
+        }
+
+        .strategy-disabled-badge {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 9px;
+            font-weight: 700;
+            background: #F6465D;
+            color: #EAECEF;
+        }
+
+        .realtime-strategy-performance-container {
+            background: #1E2329;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+            border: 1px solid #2B3139;
+        }
+
+        .realtime-strategy-chart-wrapper {
+            position: relative;
+            height: 200px;
+            margin-top: 15px;
+        }
+
+        .realtime-strategy-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .realtime-strategy-card {
+            background: #181A20;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 2px solid #2B3139;
+            transition: all 0.3s ease;
+        }
+
+        .realtime-strategy-card.enabled {
+            border-color: #0ECB81;
+            box-shadow: 0 0 10px rgba(14, 203, 129, 0.2);
+        }
+
+        .realtime-strategy-card.disabled {
+            border-color: #F6465D;
+            opacity: 0.7;
+        }
+
+        .realtime-strategy-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .realtime-strategy-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .realtime-strategy-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #F0B90B;
+        }
+
+        .realtime-strategy-stats {
+            font-size: 12px;
+            line-height: 1.8;
+            color: #EAECEF;
+        }
+
+        .realtime-strategy-pnl {
+            font-size: 18px;
+            font-weight: 700;
+            margin-top: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .top-banner {
+                font-size: 11px;
+                padding: 10px 15px;
+                margin: -10px -10px 15px -10px;
+            }
+
+            h1 {
+                font-size: 20px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+
+            .stat-box.market-regime-box {
+                grid-column: span 2;
+            }
+
+            .stat-value {
+                font-size: 18px;
+            }
+
+            .stat-box {
+                padding: 10px;
+            }
+
+            .two-column-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .strategy-item {
+                flex: 1 1 100%;
+            }
+
+            .card {
+                padding: 12px;
+            }
+
+            .trade {
+                font-size: 11px;
+                padding: 8px;
+            }
+
+            .home-btn {
+                width: 38px;
+                height: 38px;
+                font-size: 18px;
+                left: 10px;
+            }
+
+            .status-box {
+                position: relative;
+                right: auto;
+                top: auto;
+                transform: none;
+                margin-top: 10px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .status-info-icons {
+                flex-wrap: wrap;
+            }
+
+            header {
+                padding-left: 50px;
+                padding-right: 10px;
+            }
+
+            .strategy-chart-wrapper {
+                height: 180px;
+            }
+
+            .strategy-performance-layout {
+                flex-direction: column;
+            }
+
+            .strategy-chart-section {
+                min-width: 100%;
+            }
+
+            .strategy-cards-section {
+                min-width: 100%;
+            }
+
+            .strategy-stats-row {
+                flex-direction: column;
+            }
+
+            .strategy-performance-chart-container {
+                padding: 15px;
+            }
+
+            .realtime-strategy-chart-wrapper {
+                height: 180px;
+            }
+
+            .realtime-strategy-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .realtime-strategy-performance-container {
+                padding: 15px;
+            }
+
+            .open-positions-container {
+                padding: 15px;
+            }
+
+            .open-positions-title {
+                font-size: 16px;
+            }
+
+            .position {
+                padding: 15px;
+            }
+
+            .position-symbol {
+                font-size: 18px;
+                flex-wrap: wrap;
+            }
+
+            .position-pnl-badge {
+                font-size: 12px;
+                padding: 3px 8px;
+            }
+
+            .position-alert {
+                font-size: 11px;
+                padding: 8px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="top-banner">
+        ⚡ AUTO-REFRESH EVERY 10 SECONDS
+    </div>
+
+    <div class="container">
+        <header>
+            <a href="https://avavoice.trade" class="home-btn" title="Go to avavoice.trade">🏠</a>
+            <div class="status-box" id="statusBox">
+                <span class="status-badge status-running">● Running</span>
+            </div>
+            <img class="logo" src="/static/aster-logo.png" alt="ASTER Logo">
+            <h1>ASTER Trading Bot</h1>
+            <div class="timestamp" id="timestamp">Loading...</div>
+        </header>
+
+        <div id="content">
+            <div class="loading">
+                <div>📊 Loading data...</div>
+            </div>
+        </div>
+    </div>
+
+    <button class="refresh-btn" onclick="refreshData()" id="refreshBtn">
+        🔄
+    </button>
+
+    <script>
+        const API_URL = window.location.origin + '/dashboard/summary';
+        let autoRefreshInterval;
+
+        function formatNumber(num, decimals = 2) {
+            if (num === null || num === undefined) return 'N/A';
+            return num.toFixed(decimals);
+        }
+
+        function formatCurrency(num) {
+            if (num === null || num === undefined) return '$0.00';
+            return '$' + num.toFixed(2);
+        }
+
+        function formatPercentage(num, decimals = 2) {
+            if (num === null || num === undefined) return 'N/A';
+            return num.toFixed(decimals) + '%';
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = event.target;
+                const originalText = btn.textContent;
+                btn.textContent = '✓ Copied!';
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+            });
+        }
+
+        function getRegimeColor(regime) {
+            const colors = {
+                'high_vol_trending': 'regime-high_vol_trending',
+                'low_vol_ranging': 'regime-low_vol_ranging',
+                'momentum_exhaustion': 'regime-momentum_exhaustion',
+                'mixed': 'regime-mixed'
+            };
+            return colors[regime] || 'regime-mixed';
+        }
+
+        function getRegimeName(regime) {
+            const names = {
+                'high_vol_trending': '📈 High Vol Trending',
+                'low_vol_ranging': '📊 Low Vol Ranging',
+                'momentum_exhaustion': '🔄 Momentum Exhaustion',
+                'mixed': '🎯 Mixed',
+                'unknown': '❓ Unknown'
+            };
+            return names[regime] || regime;
+        }
+
+        function renderDashboard(data) {
+            const content = document.getElementById('content');
+
+            // Update Status Badge in Header
+            const statusBadge = document.querySelector('.status-badge');
+
+            if (data.bot_status.running) {
+                statusBadge.className = 'status-badge status-running';
+                statusBadge.textContent = '● Running';
+            } else {
+                statusBadge.className = 'status-badge status-stopped';
+                statusBadge.textContent = '● Stopped';
+            }
+
+            if (!data.bot_status.running) {
+                content.innerHTML = `
+                    <div class="error">
+                        ⚠️ Bot not running
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '';
+
+            // Define stats early so it can be used throughout
+            const stats = data.statistics;
+
+            // Agent Address Section
+            if (data.bot_status.agent_address) {
+                const explorerUrl = `https://etherscan.io/address/${data.bot_status.agent_address}`;
+                html += `
+                    <div class="wallet-info">
+                        <span>🔗 Agent Address (Ethereum):</span>
+                        <span class="wallet-address">${data.bot_status.agent_address}</span>
+                        <button class="copy-btn" onclick="copyToClipboard('${data.bot_status.agent_address}')">📋 Copy</button>
+                        <a href="${explorerUrl}" target="_blank" class="explorer-btn">🔍 View on Etherscan</a>
+                    </div>
+                `;
+            }
+
+            // Strategy Performance Aggregated with Chart (MOVED TO FIRST POSITION)
+            if (data.strategy_performance && Object.keys(data.strategy_performance).length > 0) {
+                // Use REAL statistics from stats, not aggregated strategy_performance
+                const totalTrades = stats.total_trades;
+                const aggregateWinRate = stats.win_rate;
+                const aggregatePnLPercent = stats.roi; // ROI is the real PnL percentage
+                const aggregateAvgHoldTime = stats.avg_hold_time_hours || 0;
+                const pnlClass = aggregatePnLPercent >= 0 ? 'positive' : 'negative';
+
+                html += `
+                    <div class="strategy-performance-chart-container">
+                        <div class="card-title">💰 PnL Performance</div>
+
+                        <div class="strategy-performance-layout">
+                            <div class="strategy-chart-section">
+                                <div class="strategy-chart-wrapper">
+                                    <canvas id="strategyChart"></canvas>
+                                </div>
+                            </div>
+
+                            <div class="strategy-cards-section">
+                                <div class="strategy-stat-card">
+                                    <div class="strategy-name">
+                                        Overall Performance
+                                    </div>
+                                    <div class="strategy-metrics">
+                                        Trades: ${totalTrades} | Win Rate: ${formatPercentage(aggregateWinRate)}<br>
+                                        Avg Hold: ${formatNumber(aggregateAvgHoldTime, 1)}h
+                                    </div>
+                                    <div class="strategy-pnl ${pnlClass}">
+                                        ${formatPercentage(aggregatePnLPercent)}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Real-time Strategy Performance (use data.strategy_performance instead of regime_info)
+            if (data.strategy_performance && Object.keys(data.strategy_performance).length > 0) {
+                // DEBUG: Log strategy performance data
+                console.log('Strategy Performance Data:', data.strategy_performance);
+
+                html += `
+                    <div class="realtime-strategy-performance-container">
+                        <div class="card-title">💰 Strategy Performance (Real-time)</div>
+
+                        <div class="realtime-strategy-chart-wrapper">
+                            <canvas id="realtimeStrategyChart"></canvas>
+                        </div>
+
+                        <div class="realtime-strategy-grid">
+                `;
+
+                for (const [name, perf] of Object.entries(data.strategy_performance)) {
+                    const pnlPercent = stats.initial_capital > 0 ? (perf.total_pnl / stats.initial_capital) * 100 : 0;
+                    const pnlClass = pnlPercent >= 0 ? 'positive' : 'negative';
+
+                    // DEBUG: Log each strategy's data
+                    console.log(`Strategy ${name}:`, perf, `PnL%: ${pnlPercent}`);
+
+                    // Determine if strategy is enabled (all strategies are enabled by default from API)
+                    const statusClass = 'enabled';
+                    const statusBadge = '<span class="strategy-enabled-badge">ENABLED</span>';
+
+                    html += `
+                        <div class="realtime-strategy-card ${statusClass}">
+                            <div class="realtime-strategy-header">
+                                <div class="realtime-strategy-name">${name}</div>
+                                ${statusBadge}
+                            </div>
+                            <div class="realtime-strategy-stats">
+                                Trades: ${perf.total_trades} | WR: ${formatPercentage(perf.win_rate)}
+                            </div>
+                            <div class="realtime-strategy-pnl ${pnlClass}">
+                                PnL: ${formatPercentage(pnlPercent)}
+                            </div>
+                        </div>
+                    `;
+                }
+
+                html += `
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Statistics Card - Only percentages
+            // Calculate daily PnL percentage
+            const dailyPnLPercent = stats.initial_capital > 0 ? (stats.daily_pnl / stats.initial_capital) * 100 : 0;
+
+            html += `
+                <div class="card">
+                    <div class="card-title">💰 Performance</div>
+                    <div class="stats-grid">
+                        <div class="stat-box">
+                            <div class="stat-label">ROI</div>
+                            <div class="stat-value ${stats.roi >= 0 ? 'positive' : 'negative'}">
+                                ${formatPercentage(stats.roi)}
+                            </div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">Win Rate</div>
+                            <div class="stat-value">${formatPercentage(stats.win_rate)}</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">Trades</div>
+                            <div class="stat-value">${stats.total_trades}</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">Daily PnL</div>
+                            <div class="stat-value ${stats.daily_pnl >= 0 ? 'positive' : 'negative'}">
+                                ${formatPercentage(dailyPnLPercent)}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Additional Metrics Card with Market Regime - Only percentages
+            // Calculate unrealized PnL percentage
+            const unrealizedPnLPercent = stats.initial_capital > 0 ? ((stats.unrealized_pnl || 0) / stats.initial_capital) * 100 : 0;
+
+            html += `
+                <div class="card">
+                    <div class="card-title">📉 Additional Metrics</div>
+                    <div class="stats-grid">
+                        <div class="stat-box">
+                            <div class="stat-label">Unrealized PnL</div>
+                            <div class="stat-value ${(stats.unrealized_pnl || 0) >= 0 ? 'positive' : 'negative'}">
+                                ${formatPercentage(unrealizedPnLPercent)}
+                            </div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">Current Drawdown</div>
+                            <div class="stat-value negative">${formatPercentage(stats.current_drawdown || 0)}</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">Max Drawdown</div>
+                            <div class="stat-value negative">${formatPercentage(stats.max_drawdown)}</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">Avg Hold Time</div>
+                            <div class="stat-value">${formatNumber(stats.avg_hold_time_hours || 0, 1)}h</div>
+                        </div>
+            `;
+
+            // Add Market Regime box inside Additional Metrics
+            if (data.regime_info) {
+                const regime = data.regime_info;
+                html += `
+                        <div class="stat-box market-regime-box">
+                            <div class="stat-label">Market Regime</div>
+                            <div class="regime-badge ${getRegimeColor(regime.current_regime)}" style="margin: 8px 0;">
+                                ${getRegimeName(regime.current_regime)}
+                            </div>
+                            <div style="font-size: 11px; color: #848E9C; margin-top: 5px;">
+                                Conf: ${formatNumber(regime.confidence * 100)}% | Selected: ${regime.selected_strategy || 'None'}
+                            </div>
+                        </div>
+                `;
+            }
+
+            html += `
+                    </div>
+                </div>
+            `;
+
+
+            // Open Positions - ENHANCED
+            html += `
+                <div class="open-positions-container">
+                    <div class="open-positions-header">
+                        <div class="open-positions-title">
+                            📊 Open Positions
+                        </div>
+                        <div class="open-positions-count">${data.open_positions.length}</div>
+                    </div>
+            `;
+
+            if (data.open_positions.length === 0) {
+                html += `<p style="text-align: center; opacity: 0.7; padding: 20px;">No open positions</p>`;
+            } else {
+                data.open_positions.forEach(pos => {
+                    // Calculate distance from liquidation
+                    const priceDiff = pos.side === 'LONG' ?
+                        ((pos.current_price - pos.liquidation_price) / pos.liquidation_price) * 100 :
+                        ((pos.liquidation_price - pos.current_price) / pos.liquidation_price) * 100;
+
+                    // Calculate unrealized PnL percentage based on position value
+                    const positionValue = pos.entry_price * pos.quantity;
+                    const unrealizedPnLPercent = positionValue > 0 ? (pos.unrealized_pnl / positionValue) * 100 : 0;
+
+                    // Determine alert level
+                    let alertClass = '';
+                    let alertMessage = '';
+                    if (priceDiff < 5) {
+                        alertClass = 'alert-danger';
+                        alertMessage = `⚠️ DANGER! ${formatNumber(priceDiff, 1)}% from liquidation!`;
+                    } else if (priceDiff < 15) {
+                        alertClass = 'alert-warning';
+                        alertMessage = `⚡ Warning: ${formatNumber(priceDiff, 1)}% from liquidation`;
+                    }
+
+                    const sideClass = pos.side === 'LONG' ? 'position-long' : 'position-short';
+                    const pnlBadgeClass = pos.unrealized_pnl >= 0 ? 'positive' : 'negative';
+
+                    html += `
+                        <div class="position ${sideClass}">
+                            <div class="position-header">
+                                <span class="position-symbol">
+                                    ${pos.symbol}
+                                    <span class="position-pnl-badge ${pnlBadgeClass}">
+                                        ${pos.unrealized_pnl >= 0 ? '+' : ''}${formatPercentage(unrealizedPnLPercent)}
+                                    </span>
+                                </span>
+                                <span class="position-side ${pos.side === 'LONG' ? 'side-long' : 'side-short'}">
+                                    ${pos.side} ${pos.leverage}x
+                                </span>
+                            </div>
+                            <div class="position-details">
+                                <strong>Entry:</strong> ${formatCurrency(pos.entry_price)} |
+                                <strong>Current:</strong> ${formatCurrency(pos.current_price)}<br>
+                                <strong>Quantity:</strong> ${formatNumber(pos.quantity, 4)} |
+                                <strong>Hold Time:</strong> ${formatNumber(pos.hold_time_hours || 0, 1)}h<br>
+                                <strong>Liquidation:</strong> ${formatCurrency(pos.liquidation_price)}
+                                <span style="color: ${priceDiff < 15 ? '#F6465D' : '#848E9C'};">
+                                    (${formatNumber(priceDiff, 1)}% away)
+                                </span><br>
+                                <span class="position-strategy">📊 ${pos.strategy || 'Unknown'}</span>
+                            </div>
+                            ${alertMessage ? `<div class="position-alert ${alertClass}">⚠️ ${alertMessage}</div>` : ''}
+                        </div>
+                    `;
+                });
+            }
+
+            html += `</div>`;
+
+            // Recent Trades
+            html += `
+                <div class="card">
+                    <div class="card-title">📜 Recent Trades</div>
+            `;
+
+            if (data.recent_trades.length === 0) {
+                html += `<p style="text-align: center; opacity: 0.7;">No recent trades</p>`;
+            } else {
+                data.recent_trades.reverse().forEach(trade => {
+                    const exitTime = new Date(trade.exit_time);
+                    html += `
+                        <div class="trade">
+                            <div class="trade-header">
+                                <strong>${trade.symbol}</strong>
+                                <span class="position-side ${trade.side === 'LONG' ? 'side-long' : 'side-short'}">
+                                    ${trade.side}
+                                </span>
+                            </div>
+                            <div>
+                                Entry: ${formatCurrency(trade.entry_price)} →
+                                Exit: ${formatCurrency(trade.exit_price)}<br>
+                                PnL: <span class="${trade.pnl >= 0 ? 'positive' : 'negative'}">
+                                    ${formatPercentage(trade.pnl_percentage)}
+                                </span><br>
+                                Strategy: ${trade.strategy}<br>
+                                <small style="opacity: 0.7;">Exit: ${exitTime.toLocaleString('en-US')}</small>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            html += `</div>`;
+
+            content.innerHTML = html;
+
+            // Wait for DOM to be ready, then create charts
+            setTimeout(async () => {
+                // Use internal trades from API if available, otherwise fetch from Aster
+                let allTrades = data.all_internal_trades || [];
+
+                // If no internal trades, fetch from closed positions as fallback
+                if (allTrades.length === 0) {
+                    try {
+                        const response = await fetch(window.location.origin + '/dashboard/closed-positions?limit=200');
+                        const closedData = await response.json();
+
+                        if (closedData.closed_positions && closedData.closed_positions.length > 0) {
+                            allTrades = closedData.closed_positions
+                                .filter(trade => Math.abs(trade.realized_pnl) > 0.01)
+                                .map(trade => {
+                                    const positionValue = trade.price * trade.quantity;
+                                    const pnlPercent = positionValue > 0 ? (trade.realized_pnl / positionValue) * 100 : 0;
+
+                                    return {
+                                        symbol: trade.symbol,
+                                        side: trade.side === 'SELL' ? 'LONG' : 'SHORT',
+                                        entry_price: trade.price,
+                                        exit_price: trade.price,
+                                        pnl: trade.realized_pnl,
+                                        pnl_percentage: pnlPercent,
+                                        strategy: 'Market Making',
+                                        entry_time: trade.time,
+                                        exit_time: trade.time
+                                    };
+                                })
+                                .sort((a, b) => new Date(a.exit_time) - new Date(b.exit_time));
+                        }
+                    } catch (error) {
+                        console.error('Error fetching closed positions for charts:', error);
+                    }
+                }
+
+                // Calculate REAL strategy performance from allTrades
+                const calculatedStrategyPerformance = {};
+
+                // Initialize with all strategy names from API
+                Object.keys(data.strategy_performance).forEach(stratName => {
+                    calculatedStrategyPerformance[stratName] = {
+                        total_trades: 0,
+                        winning_trades: 0,
+                        total_pnl: 0,
+                        win_rate: 0,
+                        avg_hold_time_hours: 0
+                    };
+                });
+
+                // Aggregate from actual trades
+                allTrades.forEach(trade => {
+                    const stratName = trade.strategy || 'Market Making';
+
+                    if (!calculatedStrategyPerformance[stratName]) {
+                        calculatedStrategyPerformance[stratName] = {
+                            total_trades: 0,
+                            winning_trades: 0,
+                            total_pnl: 0,
+                            win_rate: 0,
+                            avg_hold_time_hours: 0
+                        };
+                    }
+
+                    calculatedStrategyPerformance[stratName].total_trades++;
+                    calculatedStrategyPerformance[stratName].total_pnl += trade.pnl || 0;
+
+                    if ((trade.pnl || 0) > 0) {
+                        calculatedStrategyPerformance[stratName].winning_trades++;
+                    }
+                });
+
+                // Calculate win rates
+                Object.keys(calculatedStrategyPerformance).forEach(stratName => {
+                    const perf = calculatedStrategyPerformance[stratName];
+                    if (perf.total_trades > 0) {
+                        perf.win_rate = (perf.winning_trades / perf.total_trades) * 100;
+                    }
+                });
+
+                console.log('Calculated Strategy Performance from trades:', calculatedStrategyPerformance);
+
+                // Update the cards with calculated statistics!
+                updateStrategyCards(calculatedStrategyPerformance, stats.initial_capital);
+
+                // Create Strategy Performance Chart with temporal data
+                if (data.strategy_performance && Object.keys(data.strategy_performance).length > 0) {
+                    createStrategyChart(calculatedStrategyPerformance, stats.initial_capital, allTrades);
+                }
+
+                // Create Real-time Strategy Performance Chart
+                if (data.strategy_performance && Object.keys(data.strategy_performance).length > 0) {
+                    createRealtimeStrategyChart(calculatedStrategyPerformance, stats.initial_capital, allTrades);
+                }
+
+                // Load closed positions table separately (async)
+                loadClosedPositions();
+            }, 100);
+        }
+
+        let strategyChartInstance = null;
+        let realtimeStrategyChartInstance = null;
+
+        function updateStrategyCards(calculatedStrategyPerformance, initialCapital) {
+            // Update each strategy card with calculated values
+            const strategyCards = document.querySelectorAll('.realtime-strategy-card');
+
+            strategyCards.forEach(card => {
+                const strategyName = card.querySelector('.realtime-strategy-name').textContent.trim();
+                const perf = calculatedStrategyPerformance[strategyName];
+
+                if (perf) {
+                    // Calculate PnL percentage
+                    const pnlPercent = initialCapital > 0 ? (perf.total_pnl / initialCapital) * 100 : 0;
+                    const pnlClass = pnlPercent >= 0 ? 'positive' : 'negative';
+
+                    // Update stats
+                    card.querySelector('.realtime-strategy-stats').textContent =
+                        `Trades: ${perf.total_trades} | WR: ${formatPercentage(perf.win_rate)}`;
+
+                    // Update PnL
+                    const pnlElement = card.querySelector('.realtime-strategy-pnl');
+                    pnlElement.className = `realtime-strategy-pnl ${pnlClass}`;
+                    pnlElement.textContent = `PnL: ${formatPercentage(pnlPercent)}`;
+
+                    console.log(`Updated card for ${strategyName}: Trades=${perf.total_trades}, WR=${perf.win_rate.toFixed(2)}%, PnL=${pnlPercent.toFixed(2)}%`);
+                }
+            });
+        }
+
+        function createStrategyChart(strategyPerf, initialCapital, recentTrades) {
+            const canvas = document.getElementById('strategyChart');
+            if (!canvas) {
+                console.error('Canvas strategyChart not found');
+                return;
+            }
+
+            // Destroy previous chart instance if exists
+            if (strategyChartInstance) {
+                strategyChartInstance.destroy();
+            }
+
+            const ctx = canvas.getContext('2d');
+
+            // Build OVERALL cumulative PnL over time (all strategies combined)
+            const equityData = [];
+
+            if (recentTrades && recentTrades.length > 0) {
+                const sortedTrades = [...recentTrades].sort((a, b) =>
+                    new Date(a.exit_time) - new Date(b.exit_time)
+                );
+
+                let cumulativePnL = 0;
+
+                // Add starting point
+                if (sortedTrades.length > 0) {
+                    const firstTradeTime = new Date(sortedTrades[0].exit_time);
+                    equityData.push({
+                        x: new Date(firstTradeTime.getTime() - 3600000), // 1 hour before first trade
+                        y: 0
+                    });
+                }
+
+                sortedTrades.forEach(trade => {
+                    cumulativePnL += trade.pnl_percentage || 0;
+                    equityData.push({
+                        x: new Date(trade.exit_time),
+                        y: cumulativePnL
+                    });
+                });
+            }
+
+            // Always use green color for equity line
+            const lineColor = '#0ECB81';
+            const fillColor = 'rgba(14, 203, 129, 0.1)';
+
+            const dataset = {
+                label: 'Total Equity',
+                data: equityData,
+                borderColor: lineColor,
+                backgroundColor: fillColor,
+                borderWidth: 3,
+                fill: true,
+                tension: 0.4,
+                pointRadius: 0,
+                pointHoverRadius: 6,
+                pointHoverBackgroundColor: lineColor,
+                pointHoverBorderColor: '#FFFFFF',
+                pointHoverBorderWidth: 2
+            };
+
+            // If no data, create placeholder
+            if (equityData.length === 0) {
+                dataset.data = [{ x: new Date(), y: 0 }];
+                dataset.pointRadius = 6;
+            }
+
+            // Create chart
+            strategyChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: { datasets: [dataset] },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(30, 35, 41, 0.95)',
+                            titleColor: '#F0B90B',
+                            bodyColor: '#EAECEF',
+                            borderColor: '#F0B90B',
+                            borderWidth: 1,
+                            padding: 12,
+                            displayColors: false,
+                            callbacks: {
+                                label: function(context) {
+                                    return 'PnL: ' + context.parsed.y.toFixed(2) + '%';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            type: 'time',
+                            time: {
+                                unit: 'hour',
+                                displayFormats: { hour: 'HH:mm', day: 'MMM DD' }
+                            },
+                            grid: {
+                                color: 'rgba(43, 49, 57, 0.3)',
+                                drawBorder: false
+                            },
+                            ticks: {
+                                color: '#848E9C',
+                                font: { size: 10 },
+                                maxRotation: 0
+                            }
+                        },
+                        y: {
+                            grid: {
+                                color: 'rgba(43, 49, 57, 0.3)',
+                                drawBorder: false
+                            },
+                            ticks: {
+                                color: '#848E9C',
+                                font: { size: 10 },
+                                callback: function(value) {
+                                    return value.toFixed(1) + '%';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            console.log('Equity chart created with', equityData.length, 'data points');
+        }
+
+        function createRealtimeStrategyChart(strategyPerf, initialCapital, recentTrades) {
+            const canvas = document.getElementById('realtimeStrategyChart');
+            if (!canvas) {
+                console.error('Canvas realtimeStrategyChart not found');
+                return;
+            }
+
+            // Destroy previous chart instance if exists
+            if (realtimeStrategyChartInstance) {
+                realtimeStrategyChartInstance.destroy();
+            }
+
+            const ctx = canvas.getContext('2d');
+
+            // Build cumulative PnL over time - similar to Strategy PnL but with enabled/disabled styling
+            const strategyData = {};
+            Object.keys(strategyPerf).forEach(strategyName => {
+                strategyData[strategyName] = [];
+            });
+
+            if (recentTrades && recentTrades.length > 0) {
+                const sortedTrades = [...recentTrades].sort((a, b) =>
+                    new Date(a.exit_time) - new Date(b.exit_time)
+                );
+
+                const cumulativePnL = {};
+                Object.keys(strategyPerf).forEach(name => cumulativePnL[name] = 0);
+
+                sortedTrades.forEach(trade => {
+                    if (trade.strategy && strategyData[trade.strategy]) {
+                        cumulativePnL[trade.strategy] += trade.pnl_percentage || 0;
+                        strategyData[trade.strategy].push({
+                            x: new Date(trade.exit_time),
+                            y: cumulativePnL[trade.strategy]
+                        });
+                    }
+                });
+            }
+
+            const colors = [
+                { line: '#0ECB81', fill: 'rgba(14, 203, 129, 0.1)' },  // Green
+                { line: '#F6465D', fill: 'rgba(246, 70, 93, 0.1)' },   // Red
+                { line: '#F0B90B', fill: 'rgba(240, 185, 11, 0.1)' },  // Yellow
+                { line: '#6366F1', fill: 'rgba(99, 102, 241, 0.1)' },  // Purple
+                { line: '#3B82F6', fill: 'rgba(59, 130, 246, 0.1)' },  // Blue
+                { line: '#EC4899', fill: 'rgba(236, 72, 153, 0.1)' },  // Pink
+                { line: '#8B5CF6', fill: 'rgba(139, 92, 246, 0.1)' }   // Violet
+            ];
+
+            const datasets = Object.entries(strategyData)
+                .filter(([name, data]) => strategyPerf[name])
+                .map(([name, data], index) => {
+                    const perf = strategyPerf[name];
+                    const colorSet = colors[index % colors.length];
+                    // All strategies are enabled by default (no disabled state in data.strategy_performance)
+                    const isEnabled = true;
+
+                    if (data.length === 0) {
+                        const pnlPercent = initialCapital > 0 ? (perf.total_pnl / initialCapital) * 100 : 0;
+                        data = [{ x: new Date(), y: pnlPercent }];
+                    }
+
+                    return {
+                        label: name,
+                        data: data,
+                        borderColor: colorSet.line,
+                        backgroundColor: colorSet.fill,
+                        borderWidth: 2,
+                        borderDash: [],
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 0,
+                        pointHoverRadius: 5,
+                        pointHoverBackgroundColor: colorSet.line,
+                        pointHoverBorderColor: '#FFFFFF',
+                        pointHoverBorderWidth: 2
+                    };
+                });
+
+            realtimeStrategyChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: { datasets: datasets },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            align: 'end',
+                            labels: {
+                                color: '#EAECEF',
+                                font: { size: 11, weight: '600' },
+                                padding: 15,
+                                usePointStyle: true,
+                                pointStyle: 'circle',
+                                boxWidth: 8,
+                                boxHeight: 8
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(30, 35, 41, 0.95)',
+                            titleColor: '#F0B90B',
+                            bodyColor: '#EAECEF',
+                            borderColor: '#F0B90B',
+                            borderWidth: 1,
+                            padding: 12,
+                            displayColors: true,
+                            callbacks: {
+                                label: function(context) {
+                                    const strategyName = context.dataset.label;
+                                    const strategyData = strategyPerf[strategyName];
+                                    return [
+                                        strategyName + ': ' + context.parsed.y.toFixed(2) + '%',
+                                        'Trades: ' + strategyData.total_trades,
+                                        'WR: ' + strategyData.win_rate.toFixed(2) + '%'
+                                    ];
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            type: 'time',
+                            time: {
+                                unit: 'hour',
+                                displayFormats: { hour: 'HH:mm' }
+                            },
+                            grid: {
+                                color: 'rgba(43, 49, 57, 0.3)',
+                                drawBorder: false
+                            },
+                            ticks: {
+                                color: '#848E9C',
+                                font: { size: 10 },
+                                maxRotation: 0
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(43, 49, 57, 0.3)',
+                                drawBorder: false
+                            },
+                            ticks: {
+                                color: '#848E9C',
+                                font: { size: 10 },
+                                callback: function(value) {
+                                    return value.toFixed(1) + '%';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            console.log('Real-time chart created with', datasets.length, 'strategies');
+        }
+
+        async function loadClosedPositions() {
+            try {
+                const response = await fetch(window.location.origin + '/dashboard/closed-positions?limit=20');
+                const data = await response.json();
+
+                if (data.closed_positions && data.closed_positions.length > 0) {
+                    let html = `
+                        <div class="card">
+                            <div class="card-title">🗂️ Closed Positions (Last ${data.count})</div>
+                    `;
+
+                    data.closed_positions.forEach(trade => {
+                        const pnlClass = trade.realized_pnl >= 0 ? 'positive' : 'negative';
+                        const tradeDate = new Date(trade.time);
+
+                        // Calculate PnL percentage based on position value
+                        const positionValue = trade.price * trade.quantity;
+                        const pnlPercent = positionValue > 0 ? (trade.realized_pnl / positionValue) * 100 : 0;
+
+                        html += `
+                            <div class="trade">
+                                <div class="trade-header">
+                                    <strong>${trade.symbol}</strong>
+                                    <span class="position-side ${trade.side === 'BUY' ? 'side-long' : 'side-short'}">
+                                        ${trade.side}
+                                    </span>
+                                </div>
+                                <div>
+                                    Price: ${formatCurrency(trade.price)} |
+                                    Qty: ${formatNumber(trade.quantity, 4)}<br>
+                                    Realized PnL: <span class="${pnlClass}">
+                                        ${formatPercentage(pnlPercent)}
+                                    </span><br>
+                                    Time: ${tradeDate.toLocaleString('en-US')}
+                                </div>
+                            </div>
+                        `;
+                    });
+
+                    html += `</div>`;
+
+                    // Create a temp container to avoid disrupting charts
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = html;
+                    document.getElementById('content').appendChild(tempDiv.firstElementChild);
+                }
+            } catch (error) {
+                console.error('Error loading closed positions:', error);
+            }
+        }
+
+        async function refreshData() {
+            const refreshBtn = document.getElementById('refreshBtn');
+            refreshBtn.classList.add('spinning');
+
+            try {
+                const response = await fetch(API_URL);
+                const data = await response.json();
+
+                // Update timestamp
+                const timestamp = new Date(data.timestamp);
+                document.getElementById('timestamp').textContent =
+                    'Last update: ' + timestamp.toLocaleString('en-US');
+
+                renderDashboard(data);
+            } catch (error) {
+                document.getElementById('content').innerHTML = `
+                    <div class="error">
+                        ❌ Error loading data<br>
+                        <small>${error.message}</small>
+                    </div>
+                `;
+            } finally {
+                refreshBtn.classList.remove('spinning');
+            }
+        }
+
+        // Initial load
+        refreshData();
+
+        // Auto-refresh every 10 seconds
+        autoRefreshInterval = setInterval(refreshData, 10000);
+
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', () => {
+            if (autoRefreshInterval) {
+                clearInterval(autoRefreshInterval);
+            }
+        });
+    </script>
+</body>
+</html>
