@@ -1,6 +1,8 @@
 # Astra LLM
 
-### AI Trading Live on AsterDEX
+<img width="1028" height="380" alt="image" src="https://github.com/user-attachments/assets/2b16e7d7-5549-4d53-8ed7-0e38a0c1bb3e" />
+
+### AI Live Trading on AsterDEX
 
 [![Status](https://img.shields.io/badge/Status-Live%20Trading-success)](https://astrallm.net)
 [![Network](https://img.shields.io/badge/Network-Astar-blueviolet)](https://astar.network)
