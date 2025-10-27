@@ -1,6 +1,6 @@
 # Astra LLM
 
-<img width="1028" height="380" alt="image" src="https://github.com/user-attachments/assets/2b16e7d7-5549-4d53-8ed7-0e38a0c1bb3e" />
+<img src="https://pbs.twimg.com/profile_banners/1981369953103261696/1761235409/1500x500" alt="Image"/><img width="1500" height="500" alt="image" src="https://github.com/user-attachments/assets/f0e2ab89-9349-419a-997c-a4b541af2416" />
 
 ### AI Live Trading on AsterDEX
 
