@@ -6,10 +6,10 @@
 ### AI Live Trading on AsterDEX
 
 [![Status](https://img.shields.io/badge/Status-Live%20Trading-success)](https://astrallm.net)
-[![Network](https://img.shields.io/badge/Network-Astar-blueviolet)](https://astar.network)
+[![Network](https://img.shields.io/badge/Network-AsterDex-blueviolet)]([https://AsterDex.network](https://bscscan.com))
 [![Platform](https://img.shields.io/badge/Platform-AsterDEX-blue)](https://asterdex.io)
 
-An institutional-grade automated trading platform specifically designed for AsterDEX, powered by advanced AI models providing real-time strategy execution on the Astar Network decentralized exchange.
+An institutional-grade automated trading platform specifically designed for AsterDEX, powered by advanced AI models providing real-time strategy execution on the AsterDex Network decentralized exchange.
 
 ---
 
@@ -42,7 +42,7 @@ An institutional-grade automated trading platform specifically designed for Aste
 
 ## 📋 Overview
 
-Astra LLM is a sophisticated AI-powered trading system built exclusively for **AsterDEX**, the leading decentralized exchange on the Astar Network. The platform combines cutting-edge artificial intelligence with deep integration into AsterDEX's infrastructure, enabling automated trading strategies that leverage the unique characteristics of the Astar ecosystem.
+Astra LLM is a sophisticated AI-powered trading system built exclusively for **AsterDEX**, the leading decentralized exchange on the AsterDex Network. The platform combines cutting-edge artificial intelligence with deep integration into AsterDEX's infrastructure, enabling automated trading strategies that leverage the unique characteristics of the AsterDex ecosystem.
 
 ---
 
@@ -50,10 +50,10 @@ Astra LLM is a sophisticated AI-powered trading system built exclusively for **A
 
 AstraLLM is purpose-built for AsterDEX to take advantage of:
 
-- **Native Astar Network Integration**: Optimized for Astar's unique multi-chain architecture
+- **Native AsterDex Network Integration**: Optimized for AsterDex's unique multi-chain architecture
 - **Low Transaction Costs**: Efficient gas optimization for frequent trading operations
 - **Deep Liquidity Access**: Direct integration with AsterDEX liquidity pools
-- **Fast Finality**: Leveraging Astar's high-speed consensus for rapid trade execution
+- **Fast Finality**: Leveraging AsterDex's high-speed consensus for rapid trade execution
 - **Smart Contract Synergy**: Custom contracts designed specifically for AsterDEX protocols
 
 ---
@@ -104,7 +104,7 @@ A high-frequency strategy designed to capture short-term momentum on AsterDEX tr
 - Adapts to DEX-specific volatility patterns
 
 **Performance Characteristics:**
-- Optimized for low-latency execution on Astar Network
+- Optimized for low-latency execution on AsterDex Network
 - Capitalizes on liquidity events and large trades
 - Active monitoring of multiple trading pairs simultaneously
 
@@ -146,7 +146,7 @@ Identifies and trades extreme market conditions on AsterDEX, capitalizing on mea
 **Risk Management:**
 - Tight stop losses to protect against continued trends
 - Position sizing based on available DEX liquidity
-- Dynamic adjustment for gas costs on Astar Network
+- Dynamic adjustment for gas costs on AsterDex Network
 
 ---
 
@@ -181,7 +181,7 @@ Exploits funding rate differentials and inefficiencies across different trading 
 - **Cross-Platform Analysis**: Compares AsterDEX prices with other exchanges
 - **Leverage Efficiency**: Optimized position sizing for arbitrage opportunities
 - **Low Directional Risk**: Market-neutral strategy design
-- **Gas Cost Awareness**: Accounts for Astar Network transaction fees
+- **Gas Cost Awareness**: Accounts for AsterDex Network transaction fees
 
 **Arbitrage Mechanisms:**
 - Identifies price discrepancies between AsterDEX and CEXs
@@ -284,7 +284,7 @@ The platform provides continuous AI-powered analysis of major cryptocurrencies a
 
 ### Backend & Blockchain Integration
 
-- **Astar Network Native**: Built specifically for Astar's infrastructure
+- **AsterDex Network Native**: Built specifically for AsterDex's infrastructure
 - **AsterDEX Smart Contracts**: Direct integration with exchange protocols
 - **Custom AI Models**: Specialized algorithms for DEX trading patterns
 - **Real-Time Data Processing**: High-frequency market data analysis
@@ -308,13 +308,13 @@ The platform provides continuous AI-powered analysis of major cryptocurrencies a
 Web-based dashboard providing real-time visualization of AsterDEX trading activity, strategy performance, and market analysis.
 
 #### Trading Engine
-Core system managing strategy execution, order routing to AsterDEX, and position management on Astar Network.
+Core system managing strategy execution, order routing to AsterDEX, and position management on AsterDex Network.
 
 #### AI/ML Services
 Machine learning models and LLM services providing market analysis, signal generation, and strategy optimization for AsterDEX.
 
 #### Blockchain Interface
-Direct integration layer with Astar Network and AsterDEX smart contracts for transaction submission and monitoring.
+Direct integration layer with AsterDex Network and AsterDEX smart contracts for transaction submission and monitoring.
 
 #### Data Pipeline
 Real-time data ingestion from AsterDEX, processing, and storage for analysis and model training.
@@ -322,7 +322,7 @@ Real-time data ingestion from AsterDEX, processing, and storage for analysis and
 ### Technology Integration
 
 - **WebSocket Connections**: Persistent connections to AsterDEX for real-time market data streaming
-- **RPC Endpoints**: Direct communication with Astar Network nodes for blockchain state queries and transaction broadcasting
+- **RPC Endpoints**: Direct communication with AsterDex Network nodes for blockchain state queries and transaction broadcasting
 - **Smart Contract ABIs**: Interface definitions for all AsterDEX contracts used in trading operations
 - **Event Listeners**: Monitoring of blockchain events for trade confirmations, liquidity changes, and relevant on-chain activities
 
@@ -338,8 +338,8 @@ Learn how decentralized exchanges like AsterDEX differ from centralized platform
 #### AMM Mechanics
 Understand automated market maker systems, liquidity pools, and how trading on AsterDEX actually works.
 
-#### Astar Network Features
-Explore the unique capabilities of Astar Network that make it suitable for advanced trading strategies.
+#### AsterDex Network Features
+Explore the unique capabilities of AsterDex Network that make it suitable for advanced trading strategies.
 
 ### Strategy Education
 
@@ -358,7 +358,7 @@ How traditional technical analysis adapts to decentralized exchange markets like
 Deep dive into how AstraLLM interacts with AsterDEX smart contracts for trade execution.
 
 #### Gas Optimization Techniques
-Methods for minimizing transaction costs on Astar Network.
+Methods for minimizing transaction costs on AsterDex Network.
 
 #### MEV Protection
 Understanding and protecting against maximal extractable value attacks on DEX trades.
@@ -373,7 +373,7 @@ AstraLLM provides transparent reporting of performance metrics on AsterDEX:
 
 - **Win Rates by Strategy**: Historical success rates for each trading strategy on different AsterDEX pairs
 - **Total Volume Traded**: Aggregate trading volume executed through AstraLLM on AsterDEX
-- **Average Gas Costs**: Typical transaction costs on Astar Network for different strategy types
+- **Average Gas Costs**: Typical transaction costs on AsterDex Network for different strategy types
 - **Slippage Statistics**: Average slippage experienced across different position sizes on AsterDEX
 
 ### Performance Benchmarks
@@ -390,16 +390,16 @@ AstraLLM provides transparent reporting of performance metrics on AsterDEX:
 
 - **Additional Strategies**: Development of new trading strategies specifically optimized for AsterDEX market dynamics
 - **Enhanced AI Models**: Continuous improvement of machine learning models with more AsterDEX-specific features and data
-- **Cross-DEX Arbitrage**: Expansion to include arbitrage opportunities between AsterDEX and other Astar ecosystem DEXs
+- **Cross-DEX Arbitrage**: Expansion to include arbitrage opportunities between AsterDEX and other AsterDex ecosystem DEXs
 - **Advanced Order Types**: Implementation of sophisticated order types like TWAP (Time-Weighted Average Price) for AsterDEX
 - **Portfolio Management**: Comprehensive portfolio tracking and rebalancing across multiple AsterDEX positions
 
 ### Ecosystem Expansion
 
-- **Astar DApp Integration**: Integration with other dApps in the Astar ecosystem for enhanced functionality
+- **AsterDex DApp Integration**: Integration with other dApps in the AsterDex ecosystem for enhanced functionality
 - **Cross-Chain Features**: Support for cross-chain opportunities involving AsterDEX and bridge protocols
 - **Governance Participation**: Automated participation in AsterDEX governance and protocol improvements
-- **Yield Optimization**: Intelligent allocation between trading and yield farming opportunities on Astar
+- **Yield Optimization**: Intelligent allocation between trading and yield farming opportunities on AsterDex
 
 ---
 
@@ -415,7 +415,7 @@ This project is licensed under [License Name] - see the [LICENSE](LICENSE) file 
 
 ### Core Technologies
 
-- **Astar Network**: Built on Astar's innovative multi-chain platform, enabling efficient and cost-effective automated trading
+- **AsterDex Network**: Built on AsterDex's innovative multi-chain platform, enabling efficient and cost-effective automated trading
 - **AsterDEX**: Deep integration with AsterDEX provides the foundation for all trading operations and liquidity access
 - **AI/ML Frameworks**: Powered by cutting-edge machine learning libraries and custom LLM technology optimized for trading
 
@@ -423,7 +423,7 @@ This project is licensed under [License Name] - see the [LICENSE](LICENSE) file 
 
 - **Contributors**: Thanks to all developers and community members who have contributed to AstraLLM's development
 - **Beta Testers**: Appreciation to early users who tested strategies on AsterDEX and provided valuable feedback
-- **Astar Ecosystem**: Gratitude to the broader Astar community for support and collaboration
+- **AsterDex Ecosystem**: Gratitude to the broader AsterDex community for support and collaboration
 
 ---
 
@@ -440,7 +440,7 @@ This project is licensed under [License Name] - see the [LICENSE](LICENSE) file 
 - **Initial Launch**: First deployment of AstraLLM with core trading strategies on AsterDEX
 - **AI Enhancement**: Integration of custom LLM and advanced machine learning models
 - **Strategy Expansion**: Addition of multiple specialized trading strategies optimized for DEX markets
-- **Performance Optimization**: Continuous improvements to execution speed and cost efficiency on Astar Network
+- **Performance Optimization**: Continuous improvements to execution speed and cost efficiency on AsterDex Network
 
 ---
 
@@ -459,15 +459,15 @@ This project is licensed under [License Name] - see the [LICENSE](LICENSE) file 
 ## 📞 Connect With Us
 
 - **Website**: [https://astrallm.net](https://astrallm.net)
-- **Contract Address**: Visible in the live application on Astar Network
-- **Network**: Astar Network
+- **Contract Address**: Visible in the live application on AsterDex Network
+- **Network**: Binance Smart Chain
 - **Exchange**: AsterDEX
 
 ---
 
 <div align="center">
 
-**Powered by Astar** | **Built for AsterDEX**
+**Powered by AsterDex** | **Built for AsterDEX**
 
 ### ✅ LIVE TRADING ACTIVE ON ASTERDEX
 
